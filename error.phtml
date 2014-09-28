@@ -1,0 +1,54 @@
+<?php
+/**
+*	Decena Php Framework.
+*
+*	@author		Edgard Decena - edecena@gmail.com
+* 	@link		http://www.gnusistemas.com/
+* 	@version	1.0.0
+* 	@package	DecenaPhp
+*	@license 	http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>DecPHP Framework</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+	<h1 style="color:#1D1387">DecPHP Framework&nbsp;&nbsp;&nbsp;&nbsp;<spam style="color:#767983; font-size:14px;">versión 1.0.0 </spam></h1>
+	<hr />
+	<br />
+	<table>
+		<tbody>
+			<tr>
+				<td style="color:#DA1F1F;font-weight:bold;">ERROR: </td>
+				<td> <?php echo $e->getMessage() ?></td>
+			</tr>
+			<tr>
+				<td style="color:#DA1F1F;font-weight:bold;">SCRIPT: </td>
+				<td><?php echo $e->getTrace()[1]['file'] ?></td>
+			</tr>
+			<tr>
+				<td style="color:#DA1F1F;font-weight:bold;">LÍNEA: </td>
+				<td><?php echo $e->getTrace()[1]['line'] ?></td>
+			</tr>
+			<tr>
+				<td style="color:#DA1F1F;font-weight:bold;">CLASE: </td>
+				<td><?php echo $e->getTrace()[1]['class'] ?></td>
+			</tr>
+			<tr>
+				<td style="color:#DA1F1F;font-weight:bold;">FUNCIÓN: </td>
+				<td><?php echo $e->getTrace()[1]['function'] ?></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br />
+	<hr/>
+
+	<footer style="text-align:center;font-size:14px;"><b><spam style="color:#1D1387;">DecPHP Framework</spam></b> versión 1.0.0 es desarrollado por <a href="mailto:edecena@gmail.com">Edgard Decena</a>. <a href="http://www.gnusistemas.com/" target="_blank">GNU Sistemas</a> <?php echo date('Y') ?>. <a href="http://opensource.org/licenses/gpl-license.php" target="_blank"> Licencia GPL</a></footer>
+
+</body>
+</html>

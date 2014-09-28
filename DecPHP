@@ -1,0 +1,197 @@
+<?php
+/**
+*	Decena Php Framework.
+*
+*	@author		Edgard Decena - edecena@gmail.com
+* 	@link		http://www.gnusistemas.com
+* 	@version	1.0.0
+* 	@package	DecPHP
+*	@license 	http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
+$comandos = array(
+	'-info' => 'Muestra información sobre DecPHP. USO: php DecPHP -info',
+	'-np'   => 'Crea un nuevo proyecto en DecPHP. USO: php DecPHP -np <NombreProyecto>',
+	'-h'    => 'Muestra la ayuda y opciones del comando php DecPHP. USO: php DecPHP -h'
+);
+
+
+if (!isset($argv[1]) or empty($argv[1]) or !array_key_exists($argv[1], $comandos))
+{
+	$opcion = '-h';
+}
+else
+{
+	$opcion = $argv[1];	
+}
+
+switch ($opcion)
+{
+	case '-h':
+		ayuda($comandos);
+		break;
+
+	case '-info':
+		info();
+		break;
+
+	case '-np':
+
+		if (!isset($argv[2]) or empty($argv[2]))
+		{
+			echo "\n";
+			echo 'ERROR: Debe proveer un nombre de proyecto válido.'."\n\n";
+			echo 'No pudo crearse un nuevo proyecto en DecPHP Framework.'."\n\n";
+			exit;
+		}
+		else
+		{
+			nuevoProyecto($argv[2]);
+		}
+
+		break;
+}
+
+//-----------------------------  FUNCIÓN -h  ---------------------------------------
+function ayuda($comandos)
+{
+	echo "\n";
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo '|                            DecPHP Framework ~ DecPHP                           |'."\n";
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+	echo 'Opciones disponibles para el comando: php DecPHP:'."\n\n";
+	foreach ($comandos as $cmd => $desc)
+	{
+		echo '   '.$cmd.': '.$desc."\n\n";
+	}
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+}
+
+
+//-----------------------------  FUNCIÓN -info  ---------------------------------------
+function info()
+{
+	echo "\n";
+	echo '+---------------------------------------------------+'."\n";
+	echo '|              DecPHP Framework ~ DecPHP            |'."\n";
+	echo '+---------------------------------------------------+'."\n";
+	echo '|                                                   |'."\n";
+	echo '|    Versión: 1.0.0.                                |'."\n";
+	echo '|    Fecha: Octubre de '.date('Y').'.                        |'."\n";
+	echo '|    Desarrollador: Ing. Edgard Decena.             |'."\n";
+	echo '|    Email: edecena@gmail.com.                      |'."\n";
+	echo '|    Web: http://www.GNUSistemas.com.               |'."\n";
+	echo '|                                                   |'."\n";
+	echo '+---------------------------------------------------+'."\n";
+	echo "\n";
+}
+
+
+//-----------------------------  FUNCIÓN -np  ---------------------------------------
+
+function nuevoProyecto($nomProyecto)
+{
+	echo "\n";
+	echo '+-------------------------------------------------------------------+'."\n";
+	echo '|          Creando un nuevo proyecto en DecPHP Framework            |'."\n";
+	echo '+-------------------------------------------------------------------+'."\n";
+	echo "\n";
+
+	$requisitos['PDO Driver for SQLite'] = 'ALERTA: No se encuentra instalado PDO Driver for SQLite.';
+
+	$DS               = DIRECTORY_SEPARATOR;	
+	$ROOT             = realpath(dirname(__FILE__)).$DS;
+	$PATH_NEW_PROYECT = $ROOT.'..'.$DS.$nomProyecto;
+
+	if (!is_dir($PATH_NEW_PROYECT))
+	{
+		mkdir($PATH_NEW_PROYECT);
+		$zip = new ZipArchive;
+		$zip->open($ROOT.'NuevoProyecto.zip');
+		$zip->extractTo($PATH_NEW_PROYECT);
+		$zip->close();
+		echo 'Se crearon todos los directorios del proyecto con sus respectivos archivos...'."\n";
+
+		// Se crea la llave hash_key para el nuevo proyecto.
+		$config = file_get_contents($PATH_NEW_PROYECT.$DS.'Config'.$DS.'config.php');
+		$search = "'hash_key'			=> '*****',";
+		$replace = "'hash_key'			=> '".uniqid('', TRUE)."',";
+		$config = str_replace($search, $replace, $config);
+
+		// Se configura una base de datos local sqlite.
+		$search = "'database_config'	=> array(	'engine'     => 'sqlite:/var/www/NuevoProyecto/Data/database.db',";
+		$replace = "'database_config'	=> array(	'engine'     => 'sqlite:".realpath($PATH_NEW_PROYECT.$DS.'Data'.$DS.'database.db')."',";
+		$config = str_replace($search, $replace, $config);
+		echo 'Se configuró una base de datos local Sqlite en el config.php...'."\n";
+
+		
+		if (file_put_contents($PATH_NEW_PROYECT.$DS.'Config'.$DS.'config.php', $config))
+		{
+			echo 'Se creó una llave de seguridad hash_key en el config.php...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo crearse una llave de seguridad hash_key en el config.php!'."\n";
+		}
+
+		// Se dan permisos de escritura para las carpetas de data.
+		if (chmod($PATH_NEW_PROYECT.$DS.'Cache', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso al directorio Caché....'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso al directorio Caché!'."\n";
+		}
+
+		if (chmod($PATH_NEW_PROYECT.$DS.'Data', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso al directorio Data...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso al directorio Data!'."\n";
+		}
+
+		// Permisos a la base de datos local Sqlite.
+		if (chmod($PATH_NEW_PROYECT.$DS.'Data'.$DS.'database.db', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso a la base de datos local...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso a la base de datos local!'."\n";
+		}
+
+		ob_start();
+
+			phpinfo();
+
+		$phpinfo = ob_get_clean();
+
+		foreach ($requisitos as $clave => $valor)
+		{
+			if (stripos($phpinfo, $clave))
+			{
+				echo 'Está instalado correctamente '.$clave.'... ¡Qué bueno!'."\n";
+			}
+			else
+			{
+				echo $valor."\n";
+			}
+		}
+	}
+	else
+	{
+		echo 'ERROR: El proyecto/directorio "'.$nomProyecto.'" ya existe.'."\n\n";
+		exit;
+	}
+		
+	echo "\n";
+	echo '+-------------------------------------------------------------------+'."\n";
+	echo '|   Se ha creado con éxito un nuevo proyecto en DecPHP Framework!   |'."\n";
+	echo '+-------------------------------------------------------------------+'."\n";
+	echo "\n";
+}
