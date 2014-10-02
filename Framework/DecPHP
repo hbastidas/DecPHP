@@ -94,9 +94,9 @@ function info()
 function nuevoProyecto($nomProyecto)
 {
 	echo "\n";
-	echo '+-------------------------------------------------------------------+'."\n";
-	echo '|          Creando un nuevo proyecto en DecPHP Framework            |'."\n";
-	echo '+-------------------------------------------------------------------+'."\n";
+	echo '+-----------------------------------------------------------------------------+'."\n";
+	echo '|          Creando un nuevo proyecto en DecPHP Framework                      |'."\n";
+	echo '+-----------------------------------------------------------------------------+'."\n";
 	echo "\n";
 
 	$requisitos['PDO Driver for SQLite'] = 'ALERTA: No se encuentra instalado PDO Driver for SQLite.';
@@ -104,6 +104,7 @@ function nuevoProyecto($nomProyecto)
 	$DS               = DIRECTORY_SEPARATOR;	
 	$ROOT             = realpath(dirname(__FILE__)).$DS;
 	$PATH_NEW_PROYECT = $ROOT.'..'.$DS.$nomProyecto;
+	
 
 	if (!is_dir($PATH_NEW_PROYECT))
 	{
@@ -121,8 +122,8 @@ function nuevoProyecto($nomProyecto)
 		$config = str_replace($search, $replace, $config);
 
 		// Se configura una base de datos local sqlite.
-		$search = "'database_config'	=> array(	'engine'     => 'sqlite:/var/www/NuevoProyecto/Data/database.db',";
-		$replace = "'database_config'	=> array(	'engine'     => 'sqlite:".realpath($PATH_NEW_PROYECT.$DS.'Data'.$DS.'database.db')."',";
+		$search = "'database_config'	=> array(	'engine'   => 'sqlite:/var/www/DecPHP/NuevoProyecto/Data/database.db'";
+		$replace = "'database_config'	=> array(	'engine'   => 'sqlite:".realpath($PATH_NEW_PROYECT.$DS.'Data'.$DS.'database.db')."'";
 		$config = str_replace($search, $replace, $config);
 		echo 'Se configuró una base de datos local Sqlite en el config.php...'."\n";
 
@@ -190,8 +191,8 @@ function nuevoProyecto($nomProyecto)
 	}
 		
 	echo "\n";
-	echo '+-------------------------------------------------------------------+'."\n";
-	echo '|   Se ha creado con éxito un nuevo proyecto en DecPHP Framework!   |'."\n";
-	echo '+-------------------------------------------------------------------+'."\n";
+	echo '+-----------------------------------------------------------------------------+'."\n";
+	echo '|   Se ha creado con éxito un nuevo proyecto en DecPHP Framework!             |'."\n";
+	echo '+-----------------------------------------------------------------------------+'."\n";
 	echo "\n";
 }
