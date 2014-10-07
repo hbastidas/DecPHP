@@ -1,7 +1,7 @@
 DecPHP Framework
 ================
 
-<b style="color:#1D1387;">DecPHP</b> es un framework básico para el desarrollo de aplicaciones en Php, orientado a objetos y bajo el patrón de diseño Modelo-Vista-Controlador (MVC).
+<b>DecPHP</b> es un framework básico para el desarrollo de aplicaciones en Php, orientado a objetos y bajo el patrón de diseño Modelo-Vista-Controlador (MVC).
 
 Para clonar <b>DecPHP</b> en tu computador, desde la terminal o cónsola, escribir:<br/>
 <b>git clone https://github.com/edecena/DecPHP.git</b>.<br/>
